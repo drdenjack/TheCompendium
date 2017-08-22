@@ -1,0 +1,20 @@
+CC      = g++
+CFLAGS  = -g -Wall
+LDFLAGS = 
+
+
+all: my_program
+
+my_program: my_program.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+my_program.o: my_program.cpp
+	$(CC) -c $(CFLAGS) $<
+
+.PHONY: clean cleanest
+
+clean:
+	rm *.o
+
+cleanest: clean
+	rm my_program

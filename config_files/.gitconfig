@@ -1,0 +1,19 @@
+[user]
+	name = Denny Jackson
+	email = dennis.jackson@perflogic.com
+
+[color]
+	ui = true
+[alias]
+        co = checkout
+        ci = commit
+        st = status
+        br = branch
+        type = cat-file -t
+        dump = cat-file -p
+        lgfull = !"git log --graph --abbrev-commit --decorate --date=relative --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold yellow)%d%C(reset)' --all"
+        lg2 = !"git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
+        lg = !"git lgfull -30" 
+        diffm = diff master --name-only
+[core]
+	editor = emacs
