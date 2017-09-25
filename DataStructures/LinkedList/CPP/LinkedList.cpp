@@ -69,10 +69,13 @@ public:
     
     int remove(Node<T> * n);
 
+    Node<T>* find_node(Node<T> * n);
+    Node<T>* get_node_by_index(int i);
+    
     // void balance(void);
     
 private:
-    vector<Node<T> *> nodes;
+    Node<T> * head;
 };
 
 template<class T>
@@ -95,7 +98,18 @@ void LinkedList<T>::print(void)
 template<class T>
 void LinkedList<T>::add_node(Node<T> * n)
 {
-    nodes.push_back(n);
+    if(head==NULL)
+	head=n;
+    else
+    {
+	Node<T> * tmp=head;
+	while(tmp!=NULL)
+	{
+	    if(tmp->next!=NULL)
+		tmp->next=n;
+	    tmp=tmp->next;
+	}
+    }
 }
 
 template<class T>
@@ -108,19 +122,61 @@ void LinkedList<T>::add(T x)
 template<class T>
 int LinkedList<T>::remove(Node<T> * n)
 {
-    size_t size=nodes.size();
-    if(size>0)
-    {
-        for(int i=0;i<static_cast<int>(size);i++)
-        {
-	    if(nodes[i] == n)
-	    {
-		nodes.erase(nodes.begin()+i);
-		return 1;
-	    }
-        }
-    }
+    if(head==NULL)
 	return 0;
+    else
+    {
+	// Node<T>* tmp=head;
+	// while(tmp!=NULL)
+	// {
+	//     if(tmp==n)
+	// 	return tmp;
+	//     else if(tmp->next!=NULL) 
+	// 	tmp=tmp->next;
+	// }
+
+
+	// pick up right here!
+
+    }
+
+
+    return 0;
+}
+
+template<class T>
+Node<T>* LinkedList<T>::find_node(Node<T> * n)
+{
+    if(head)
+    {	
+	Node<T>* tmp=head;
+	while(tmp!=NULL)
+	{
+	    if(tmp==n)
+		return tmp;
+	    else if(tmp->next!=NULL) 
+		tmp=tmp->next;
+	}
+    }
+    return NULL;
+}
+
+template<class T>
+Node<T>* LinkedList<T>::get_node_by_index(int i)
+{
+    // size_t size=nodes.size();
+    // if(size>0)
+    // {
+    //     for(int i=0;i<static_cast<int>(size);i++)
+    //     {
+    // 	    if(nodes[i] == n)
+    // 	    {
+    // 		nodes.erase(nodes.begin()+i);
+    // 		return 1;
+    // 	    }
+    //     }
+    // }
+    return NULL;
 }
 
 int main() {
