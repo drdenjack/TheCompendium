@@ -10,12 +10,8 @@ public:
     Node();
     Node(T val);
     Node(const Node &n);
-    ~Node();
+    // ~Node();
 
-    void set_data(T d);
-    T get_data();
-
-private:
     T data;
     Node * next;
     
@@ -25,37 +21,28 @@ template<class T>
 Node<T>::Node()
 {
     data = -1;
+    next=NULL;
 }
 
 template<class T>
 Node<T>::Node(T v)
 {
     data = v;
+    next=NULL;
 }
 
-template<class T>
-Node<T>::~Node()
-{
-    if(next)
-	delete next;
-}
+// template<class T>
+// Node<T>::~Node()
+// {
+//     // if(next)
+//     // 	delete next;
+// }
 
 template<class T>
 Node<T>::Node(const Node &n)
 {
     data = n.data;
-}
-
-template<class T>
-void Node<T>::set_data(T d)
-{
-    data=d;
-}
-
-template<class T>
-T Node<T>::get_data(void)
-{
-    return data;
+    next=n.next;
 }
 
 // --------------------------------------------------------------
@@ -63,14 +50,16 @@ template<class T>
 class LinkedList
 {
 public:
+    LinkedList();
     void print();
     void add_node(Node<T> * n);
     void add(T x);
     
     int remove(Node<T> * n);
+    int remove_at_index(int i);
 
     Node<T>* find_node(Node<T> * n);
-    Node<T>* get_node_by_index(int i);
+    Node<T>* find_node_by_index(int i);
     
     // void balance(void);
     
@@ -79,36 +68,53 @@ private:
 };
 
 template<class T>
-void LinkedList<T>::print(void)
+LinkedList<T>::LinkedList()
 {
+    head = NULL;
+}
+
+template<class T>
+void LinkedList<T>::print(void)
+ {
     cout << "Printing ..." << endl;
-    size_t size=nodes.size();
-    if(size>0)
+    if(!head)
+	cout << "List is empty!" << endl;
+    else
     {
-        for(int i=0;i<static_cast<int>(size);i++)
-        {
-            cout << nodes[i]->get_data();
-            if(i<static_cast<int>(size)-1)
-                cout << ", ";
-        }
-        cout << endl;
+	Node<T> * tmp=head;
+	while(tmp)
+	{
+	    cout << tmp->data;
+	    
+	    tmp=tmp->next;
+	    
+	    if(tmp)
+	    	cout << " -> ";
+	    else
+	    	cout << endl;
+	}
     }
 }
 
 template<class T>
 void LinkedList<T>::add_node(Node<T> * n)
 {
-    if(head==NULL)
+    cout << "adding: " << n->data << endl;
+    
+    if(!head)
+    {
 	head=n;
+	// cout << "adding head" << endl;
+    }
     else
     {
+	// cout << "adding non-null" << endl;
 	Node<T> * tmp=head;
-	while(tmp!=NULL)
+	while(tmp->next)
 	{
-	    if(tmp->next!=NULL)
-		tmp->next=n;
 	    tmp=tmp->next;
 	}
+	tmp->next=n;
     }
 }
 
@@ -122,25 +128,50 @@ void LinkedList<T>::add(T x)
 template<class T>
 int LinkedList<T>::remove(Node<T> * n)
 {
-    if(head==NULL)
+    cout << "Removing " << n->data << endl;
+
+    if(!head)
 	return 0;
+    else if(head==n)
+    {
+	Node<T>* tmp=head;
+	if(head->next)
+	    head=head->next;
+	else
+	    head=NULL;
+	delete tmp;
+	return 1;
+    }
     else
     {
-	// Node<T>* tmp=head;
-	// while(tmp!=NULL)
-	// {
-	//     if(tmp==n)
-	// 	return tmp;
-	//     else if(tmp->next!=NULL) 
-	// 	tmp=tmp->next;
-	// }
-
-
-	// pick up right here!
-
+	cout << "removing other " << endl;
+	Node<T>* tmp=head;
+	while(tmp->next)
+	{
+	    if(tmp->next==n)
+	    {
+		Node<T>* found=tmp->next;
+		if(found->next)
+		    tmp->next=found->next;
+		else
+		    tmp->next=NULL;
+		delete found;
+		return 1;
+	    }
+	    tmp=tmp->next;
+	}
     }
 
+    return 0;
+}
 
+template<class T>
+int LinkedList<T>::remove_at_index(int i)
+{
+    Node<T> * n = find_node_by_index(i);
+    if(n)
+	return remove(n);
+    
     return 0;
 }
 
@@ -150,11 +181,11 @@ Node<T>* LinkedList<T>::find_node(Node<T> * n)
     if(head)
     {	
 	Node<T>* tmp=head;
-	while(tmp!=NULL)
+	while(tmp)
 	{
 	    if(tmp==n)
 		return tmp;
-	    else if(tmp->next!=NULL) 
+	    else if(tmp->next) 
 		tmp=tmp->next;
 	}
     }
@@ -162,20 +193,25 @@ Node<T>* LinkedList<T>::find_node(Node<T> * n)
 }
 
 template<class T>
-Node<T>* LinkedList<T>::get_node_by_index(int i)
+Node<T>* LinkedList<T>::find_node_by_index(int i)
 {
-    // size_t size=nodes.size();
-    // if(size>0)
-    // {
-    //     for(int i=0;i<static_cast<int>(size);i++)
-    //     {
-    // 	    if(nodes[i] == n)
-    // 	    {
-    // 		nodes.erase(nodes.begin()+i);
-    // 		return 1;
-    // 	    }
-    //     }
-    // }
+    if(head)
+    {	
+	int idx=0;
+	Node<T>* tmp=head;
+	while(tmp)
+	{
+	    if(idx==i)
+	    {
+		cout << " found index: " << i << " -- tmp->data: " << tmp->data << endl;
+		return tmp;
+	    }
+
+	    tmp=tmp->next;
+	    idx++;
+	}
+    }
+    cout << "node does not exist at index = " << i << endl;
     return NULL;
 }
 
@@ -183,17 +219,38 @@ int main() {
 	cout << "Linked List" << endl;
 
 	LinkedList<double> l;
+	l.print();
 	l.add(11);
+	l.add(13);
 	Node<double> * n2 = new Node<double>(9);
 	l.add_node(n2);
-
+	l.add(-14);
 	l.print();
 
 	cout << "removing, n2..." << endl;
-
 	l.remove(n2);
-	
 	l.print();
 
+	cout << "getting first node (index = 0)" << endl;
+	Node<double> * n = l.find_node_by_index(0);
+	cout << "returned val: " << n->data << endl;
+	l.remove(n);
+	l.print();
+
+	
+	cout << "removing node at index = 1" << endl;	
+	l.remove_at_index(1);
+	l.print();
+
+	cout << "removing node at index = 0" << endl;	
+	l.remove_at_index(0);
+	l.print();
+
+	
+	cout << "removing node at index = 0" << endl;	
+	l.remove_at_index(0);
+	l.print();
+
+	
 	return 0;
 }
