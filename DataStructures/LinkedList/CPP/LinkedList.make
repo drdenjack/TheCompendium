@@ -3,13 +3,13 @@ CFLAGS  = -g -Wall
 LDFLAGS = 
 
 
-all: linkedlist
+all: LinkedList
 
-linkedlist: linkedlist.o
-	$(CC) -o $@ $^ $(LDFLAGS)
-
-linkedlist.o: LinkedList.cpp
+LinkedList.o: LinkedList.cpp
 	$(CC) -c $(CFLAGS) $<
+
+LinkedList: LinkedList.o
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 .PHONY: clean cleanest
 
@@ -17,4 +17,4 @@ clean:
 	rm *.o
 
 cleanest: clean
-	rm linkedlist
+	rm LinkedList LinkedList.exe
