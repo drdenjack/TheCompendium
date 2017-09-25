@@ -3,12 +3,12 @@ CFLAGS  = -g -Wall
 LDFLAGS = 
 
 
-all: bst
+all: BST
 
-bst: bst.o
+BST: BST.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-bst.o: BST.cpp
+BST.o: BST.cpp
 	$(CC) -c $(CFLAGS) $<
 
 .PHONY: clean cleanest
@@ -17,4 +17,4 @@ clean:
 	rm *.o
 
 cleanest: clean
-	rm bst
+	rm BST BST.exe
