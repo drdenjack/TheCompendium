@@ -51,6 +51,8 @@ class LinkedList
 {
 public:
     LinkedList();
+    ~LinkedList();
+    
     void print();
     void add_node(Node<T> * n);
     void add(T x);
@@ -71,6 +73,21 @@ template<class T>
 LinkedList<T>::LinkedList()
 {
     head = NULL;
+}
+
+template<class T>
+LinkedList<T>::~LinkedList()
+{
+    Node<T>* n=head;
+    if(n)
+    {
+    	while(n)
+    	{
+    	    Node<T>* prev=n;
+    	    n=n->next;
+    	    delete prev;
+    	}
+    }
 }
 
 template<class T>
@@ -216,41 +233,39 @@ Node<T>* LinkedList<T>::find_node_by_index(int i)
 }
 
 int main() {
-	cout << "Linked List" << endl;
+    cout << "Linked List" << endl;
 
-	LinkedList<double> l;
-	l.print();
-	l.add(11);
-	l.add(13);
-	Node<double> * n2 = new Node<double>(9);
-	l.add_node(n2);
-	l.add(-14);
-	l.print();
+    LinkedList<double> l;
+    l.print();
+    l.add(11);
+    l.add(13);
+    Node<double> * n2 = new Node<double>(9);
+    l.add_node(n2);
+    l.add(-14);
+    l.print();
 
-	cout << "removing, n2..." << endl;
-	l.remove(n2);
-	l.print();
+    cout << "removing, n2..." << endl;
+    l.remove(n2);
+    l.print();
 
-	cout << "getting first node (index = 0)" << endl;
-	Node<double> * n = l.find_node_by_index(0);
-	cout << "returned val: " << n->data << endl;
-	l.remove(n);
-	l.print();
+    cout << "getting first node (index = 0)" << endl;
+    Node<double> * n = l.find_node_by_index(0);
+    cout << "returned val: " << n->data << endl;
+    l.remove(n);
+    l.print();
 
-	
-	cout << "removing node at index = 1" << endl;	
-	l.remove_at_index(1);
-	l.print();
+    cout << "removing node at index = 1" << endl;
+    l.remove_at_index(1);
+    l.print();
 
-	cout << "removing node at index = 0" << endl;	
-	l.remove_at_index(0);
-	l.print();
-
-	
-	cout << "removing node at index = 0" << endl;	
-	l.remove_at_index(0);
-	l.print();
+    cout << "removing node at index = 0" << endl;
+    l.remove_at_index(0);
+    l.print();
 
 	
-	return 0;
+    cout << "removing node at index = 0" << endl;
+    l.remove_at_index(0);
+    l.print();
+
+    return 0;
 }
