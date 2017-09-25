@@ -51,6 +51,8 @@ class LinkedList
 {
 public:
     LinkedList();
+    ~LinkedList();
+    
     void print();
     void add_node(Node<T> * n);
     void add(T x);
@@ -71,6 +73,21 @@ template<class T>
 LinkedList<T>::LinkedList()
 {
     head = NULL;
+}
+
+template<class T>
+LinkedList<T>::~LinkedList()
+{
+    Node<T>* n=head;
+    if(n)
+    {
+    	while(n)
+    	{
+    	    Node<T>* prev=n;
+    	    n=n->next;
+    	    delete prev;
+    	}
+    }
 }
 
 template<class T>
