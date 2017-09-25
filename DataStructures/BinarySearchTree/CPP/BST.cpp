@@ -10,12 +10,8 @@ public:
     Node();
     Node(int v);
     Node(const Node &n);
-    ~Node();
+    // ~Node();
 
-    void set_data(int d);
-    int get_data();
-
-private:
     int data;
     Node* left;
     Node* right;
@@ -48,32 +44,16 @@ Node<T>::Node(const Node &n)
 	right = n.right;
 }
 
-template<class T>
-Node<T>::~Node()
-{
-    if(left)
-	delete left;
-    if(right)
-	delete right;
-}
-
-template<class T>
-void Node<T>::set_data(int d)
-{
-    data=d;
-}
-
-template<class T>
-int Node<T>::get_data(void)
-{
-    return data;
-}
+// template<class T>
+// Node<T>::~Node()
+// {
+// }
 
 template<class T>
 class BinarySearchTree
 {
 public:
-    void print_tree();
+    void print();
     void add_node(Node<T> * n);
     void add(T x);
     
@@ -86,7 +66,7 @@ private:
 };
 
 template<class T>
-void BinarySearchTree<T>::print_tree(void)
+void BinarySearchTree<T>::print(void)
 {
     cout << "Printing ..." << endl;
     size_t size=nodes.size();
@@ -94,7 +74,7 @@ void BinarySearchTree<T>::print_tree(void)
     {
         for(int i=0;i<static_cast<int>(size);i++)
         {
-            cout << nodes[i]->get_data();
+            cout << nodes[i]->data;
             if(i<static_cast<int>(size)-1)
                 cout << ", ";
         }
@@ -141,13 +121,13 @@ int main() {
 	Node<int> * n2 = new Node<int>(9);
 	b.add_node(n2);
 
-	b.print_tree();
+	b.print();
 
 	cout << "removing, n2..." << endl;
 
 	b.remove(n2);
 	
-	b.print_tree();
+	b.print();
 
 	return 0;
 }
