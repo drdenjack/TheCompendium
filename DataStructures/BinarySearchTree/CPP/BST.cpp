@@ -72,8 +72,11 @@ public:
     // BST searching
     Node<T> * find(T);
 
-    // void balance(void);
+    void balance(void);
     
+    vector<Node<T> *> get_sorted_list(void);
+    void add_node_to_list(Node<T> * n, vector<Node<T> *> &list);
+	
 private:
     Node<T> * head;
     void swap(Node<T> *, Node<T> *);
@@ -285,6 +288,45 @@ Node<T> * BinarySearchTree<T>::find(T val)
     return NULL;
 }
     
+template<class T>
+void BinarySearchTree<T>::balance(void)
+{
+    vector<Node<T> *> v=get_sorted_list();
+
+    int size=static_cast<int>(v.size());
+    // cout << "size: " << size << endl;
+    for(int i=0;i<size;i++)
+    {
+	cout << v[i]->data;
+	if(i<size-1)
+	    cout << " -> ";
+	
+    }
+    cout << endl;
+}
+
+template<class T>
+vector<Node<T> *> BinarySearchTree<T>::get_sorted_list(void)
+{
+    vector<Node<T> *> v;
+    add_node_to_list(head,v);
+    return v;
+}
+
+template<class T>
+void BinarySearchTree<T>::add_node_to_list(Node<T> * n, vector<Node<T> *> &list)
+{
+    if(n)
+    {
+	add_node_to_list(n->left,list);
+	list.push_back(n);
+	add_node_to_list(n->right,list);
+    }
+    
+    
+}
+
+
 
 template<class T>
 queue<Node<T> *> BinarySearchTree<T>::get_bfs_queue()
@@ -354,6 +396,14 @@ int main() {
 	    cout << "not found" << endl;
 	else
 	    cout << "found: " << found->data << endl;
+
+
+
+	cout << " balancing ... " << endl;
+	b.balance();
+
+
 	
 	return 0;
+
 }
