@@ -105,18 +105,14 @@ void BinarySearchTree<T>::print_tree(void)
 template<class T>
 void BinarySearchTree<T>::add_node(Node<T> * n)
 {
-    // cout << "add_node: n->get_data(): " << n->get_data() << endl;
     nodes.push_back(n);
-    // cout << "DONE adding" << endl;
 }
 
 template<class T>
 void BinarySearchTree<T>::add(T x)
 {
     Node<T> * n = new Node<T>(x);
-    // cout << "add: n->get_data(): " << n->get_data() << endl;
     add_node(n);
-    // cout << "DONE adding" << endl;
 }
 
 template<class T>
