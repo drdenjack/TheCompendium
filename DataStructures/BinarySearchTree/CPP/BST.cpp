@@ -16,7 +16,8 @@ public:
     int data;
     Node* left;
     Node* right;
-    
+
+    void delete_all_children(void);
 };
 
 template<class T>
@@ -43,6 +44,21 @@ Node<T>::Node(const Node &n)
 	left = n.left;
     if(n.right)
 	right = n.right;
+}
+
+template<class T>
+void Node<T>::delete_all_children(void)
+{
+    if(left)
+    {
+        left->delete_all_children();
+        delete left;
+    }
+    if(right)
+    {
+        right->delete_all_children();
+        delete right;
+    }
 }
 
 // template<class T>
@@ -73,6 +89,7 @@ public:
     Node<T> * find(T);
 
     void balance(void);
+    void add_list_to_node(Node<T> * n,vector<Node<T> *> v);
     
     vector<Node<T> *> get_sorted_list(void);
     void add_node_to_list(Node<T> * n, vector<Node<T> *> &list);
@@ -100,7 +117,8 @@ void BinarySearchTree<T>::print(void)
 	cout << "Tree is empty!" << endl;
     else
     {
-	int depth=get_depth(head);
+	// int depth=get_depth(head);
+        int depth=0;
 	print_node(head,depth);
 
 	
@@ -124,8 +142,8 @@ void BinarySearchTree<T>::print_node(Node<T> * n,int depth)
 	for(int i=0;i<depth;i++)
 	    cout << "  ";
 	cout << n->data << endl;
-	print_node(n->left,depth-1);
-	print_node(n->right,depth-1);
+	print_node(n->right,depth+1);
+	print_node(n->left,depth+1);
     }
 }
 
@@ -265,7 +283,6 @@ Node<T> * BinarySearchTree<T>::searchNode(Node<T> * n, T val)
 	return searchNode(n->right,val);
 }
     
-
 template<class T>
 Node<T> * BinarySearchTree<T>::find(T val)
 {
@@ -293,16 +310,49 @@ void BinarySearchTree<T>::balance(void)
 {
     vector<Node<T> *> v=get_sorted_list();
 
-    int size=static_cast<int>(v.size());
-    // cout << "size: " << size << endl;
-    for(int i=0;i<size;i++)
+    Node<T> * prev_head=head;
+    head=new Node<T>;
+    
+    add_list_to_node(head,v);
+
+    prev_head->delete_all_children();
+    delete prev_head;
+}
+
+template<class T>
+void BinarySearchTree<T>::add_list_to_node(Node<T> * n,vector<Node<T> *> v)
+{
+    n->left=0;
+    n->right=0;
+        
+    int size=v.size();
+
+    if(size==1)
     {
-	cout << v[i]->data;
-	if(i<size-1)
-	    cout << " -> ";
-	
+        Node<T> * mid_node = v[0];
+        n->data=mid_node->data; 
     }
-    cout << endl;
+    else if(size>0)
+    {
+        int mid=size/2;
+        // cout << " -- size: " << size << " -- mid: " << mid << endl;
+        
+        Node<T> * mid_node = v[mid];
+        n->data=mid_node->data;
+        vector<Node<T> *> left_v(&v[0], &v[mid]);
+        vector<Node<T> *> right_v(&v[mid+1], &v[size]);
+
+        if(left_v.size())
+        {
+            n->left = new Node<T>;
+            add_list_to_node(n->left,left_v);
+        }
+        if(right_v.size())
+        {
+            n->right = new Node<T>;
+            add_list_to_node(n->right,right_v);
+        }
+    }
 }
 
 template<class T>
@@ -367,6 +417,12 @@ int main() {
 	b.add(7);
 	b.add(3);
 	b.add(12);
+	b.add(14);
+	b.add(15);
+	b.add(16);
+	b.add(20);
+	b.add(30);
+	b.add(4);
 	
 	b.print();
 
@@ -398,10 +454,14 @@ int main() {
 	    cout << "found: " << found->data << endl;
 
 
-
+	cout << " BEFORE balancing ... " << endl;
+	b.print();
+        
 	cout << " balancing ... " << endl;
 	b.balance();
-
+        
+	cout << " AFTER balancing ... " << endl;
+	b.print();
 
 	
 	return 0;
