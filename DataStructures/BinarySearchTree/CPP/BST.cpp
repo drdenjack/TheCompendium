@@ -74,7 +74,7 @@ class BinarySearchTree
 public:
     BinarySearchTree();
     void print();
-    void print_node(Node<T> *, int);
+    void print_node(Node<T> *, int, int);
 
     int add(T x);
     int remove(T val);
@@ -117,9 +117,11 @@ void BinarySearchTree<T>::print(void)
     else
     {
 	// int depth=get_depth(head);
-        int depth=0;
-	print_node(head,depth);
 
+        // print super basic tree (pre-order with indenting)
+        int height=0;
+        print_node(head,height,-1);
+        cout << endl;
 	queue<Node<T> *> q = get_bfs_queue();
 	while(!q.empty())
 	{
@@ -129,20 +131,54 @@ void BinarySearchTree<T>::print(void)
 	}
 	cout << endl;
 
+        
+        
     }
+
 }
 
+
 template<class T>
-void BinarySearchTree<T>::print_node(Node<T> * n,int depth)
+void BinarySearchTree<T>::print_node(Node<T> * n, int depth, int right)
 {
     if(n)
     {
-	for(int i=0;i<depth;i++)
-	    cout << "  ";
-	cout << n->data << endl;
-	print_node(n->right,depth+1);
-	print_node(n->left,depth+1);
+        print_node(n->right,depth+1,1);
+        
+        for(int i=0;i<depth;i++)
+            cout << "  ";
+        if(right==1)
+        {
+            cout << "/";
+        }
+        else if(right==0)
+        {
+            cout << "\\";
+        }
+        
+        cout << n->data << endl;
+        print_node(n->left,depth+1,0);
+
     }
+
+/*
+PRINTING EXAMPLE
+
+    /30
+      \20
+  /15
+    \14
+      \13
+12
+    /11
+      \9
+  \7
+      /4
+    \3
+      \1
+
+
+*/
 }
 
 template<class T>
