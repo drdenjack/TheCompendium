@@ -78,7 +78,7 @@ public:
     void add_node(Node<T> * n);
     void add(T x);
     
-    T remove(Node<T> * n);
+    int remove(T val);
 
     // non BST searching
     Node<T> * breadthFirstSearch(T);
@@ -121,7 +121,6 @@ void BinarySearchTree<T>::print(void)
         int depth=0;
 	print_node(head,depth);
 
-	
 	queue<Node<T> *> q = get_bfs_queue();
 	while(!q.empty())
 	{
@@ -191,8 +190,101 @@ void BinarySearchTree<T>::add(T x)
 }
 
 template<class T>
-T BinarySearchTree<T>::remove(Node<T> * n)
+int BinarySearchTree<T>::remove(T val)
 {
+    if(!head)
+        return 0;
+    
+    Node<T> * tmp=head;
+    Node<T> * prev;
+    while(tmp)
+    {
+        if(val==tmp->data)
+        {
+            cout << "val= " << val << " is found. removing it now ..." << endl;
+            // do_remove();
+            if(!tmp->left && !tmp->right)
+            {
+                cout << val << " has no children" << endl;
+                // node to remove has no children
+                if(tmp==prev->left)
+                    prev->left=0;
+                else
+                    prev->right=0;
+            
+                delete tmp;
+            }
+            else if(tmp->left && tmp->right)
+            {
+                cout << val << " has 2 children" << endl;
+                // node has 2 children
+
+                // find smallest element in right sub-tree
+                // swap val with tmp
+                // remove leaf
+
+                Node<T> * smallest_prev=tmp;
+                Node<T> * smallest=smallest_prev->right;
+                
+                while(smallest->left)
+                {
+                    smallest_prev=smallest;
+                    smallest=smallest->left;
+                }
+                cout << "smallest val: " << smallest->data << endl;
+                
+                tmp->data=smallest->data;
+
+                if(smallest==smallest_prev->left)
+                {
+                    cout << "smallest_prev->left" << endl;
+                    smallest_prev->left=0;
+                }
+                else
+                {
+                    cout << "smallest_prev->right" << endl;
+                    smallest_prev->right=0;
+                }
+                delete smallest; 
+                            
+            }
+            else
+            {
+                cout << val << " has 1 child" << endl;
+
+                // node has 1 child
+                if(tmp==prev->left)
+                {
+                    if(tmp->left)
+                        prev->left=tmp->left;
+                    else
+                        prev->left=tmp->right;
+                }
+                else
+                {
+                    if(tmp->left)
+                        prev->right=tmp->left;
+                    else
+                        prev->right=tmp->right;
+                }
+                delete tmp;
+            }
+            
+            return 1;
+        }
+        else if(val>tmp->data)
+        {
+            prev=tmp;
+            tmp=tmp->right;
+        }
+        else
+        {
+            prev=tmp;
+            tmp=tmp->left;
+        }
+            
+    }
+    
     return 0;
 }
 
@@ -463,7 +555,13 @@ int main() {
 	cout << " AFTER balancing ... " << endl;
 	b.print();
 
-	
+
+        b.remove(16);
+        
+	cout << " AFTER removing ... " << endl;
+	b.print();
+
+
 	return 0;
 
 }
