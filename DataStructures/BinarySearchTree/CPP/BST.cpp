@@ -75,9 +75,8 @@ public:
     BinarySearchTree();
     void print();
     void print_node(Node<T> *, int);
-    void add_node(Node<T> * n);
-    void add(T x);
-    
+
+    int add(T x);
     int remove(T val);
 
     // non BST searching
@@ -147,23 +146,26 @@ void BinarySearchTree<T>::print_node(Node<T> * n,int depth)
 }
 
 template<class T>
-void BinarySearchTree<T>::add_node(Node<T> * n)
+int BinarySearchTree<T>::add(T x)
 {
     if(!head)
-	head=n;
+	head=new Node<T>(x);
     else
     {
 	Node<T> * tmp=head;
 	while(tmp)
 	{
-	    if(n->data < tmp->data)
+            if(x==head->data)
+                return 0;
+            
+	    if(x < tmp->data)
 	    {
 		if(tmp->left)
 		    tmp=tmp->left;
 		else
 		{
-		    tmp->left=n;
-		    return;
+		    tmp->left=new Node<T>(x);
+		    return 1;
 		}
 	    }
 	    else
@@ -172,21 +174,15 @@ void BinarySearchTree<T>::add_node(Node<T> * n)
 		    tmp=tmp->right;
 		else
 		{
-		    tmp->right=n;
-		    return;
+		    tmp->right=new Node<T>(x);
+		    return 1;
 		}
 	    }
 	    
 	}
 
     }
-}
-
-template<class T>
-void BinarySearchTree<T>::add(T x)
-{
-    Node<T> * n = new Node<T>(x);
-    add_node(n);
+    return 0;
 }
 
 template<class T>
@@ -501,9 +497,7 @@ int main() {
 
 	BinarySearchTree<int> b;
 	b.add(11);
-	Node<int> * n2 = new Node<int>(9);
-	b.add_node(n2);
-
+	b.add(9);
 	b.add(13);
 	b.add(1);
 	b.add(7);
