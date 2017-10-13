@@ -92,6 +92,9 @@ public:
     
     vector<Node<T> *> get_sorted_list(void);
     void add_node_to_list(Node<T> * n, vector<Node<T> *> &list);
+
+    Node<T> * find_closest(Node<T> * n, T val);
+    Node<T> * find_closest(T val);
 	
 private:
     Node<T> * head;
@@ -528,6 +531,69 @@ queue<Node<T> *> BinarySearchTree<T>::get_bfs_queue()
     return ret;
 }
 
+template<class T>
+Node<T> * BinarySearchTree<T>::find_closest(T val)
+{
+    return find_closest(head,val);
+}
+
+template<class T>
+Node<T> * BinarySearchTree<T>::find_closest(Node<T> * n, T val)
+{
+/*
+      
+              10
+        /          \
+       6             14
+    /     \        /    \
+  3        9      12    15
+ / \      /      
+1   5    7       
+
+
+// find_closest(8): 7
+// find_closest(0): NULL
+// find_closest(2): 1
+// find_closest(4): 3
+// find_closest(11): 10
+// find_closest(13): 14
+
+*/
+     
+    if(n->data==val)
+        return n;
+    if(val<n->data)
+    {
+        if(!n->left)
+            return NULL;
+        return find_closest(n->left,val);
+    }
+    else
+    {
+        if(!n->right)
+            return n;
+        Node<T> * found = find_closest(n->right,val);
+        if(found)
+            return found;
+        else
+            return n;
+        
+    }
+    
+}
+
+template<class T>
+void find_thing(BinarySearchTree<T> b, T a)
+{
+    cout << "finding closest to " << a << endl;
+    Node<T> * f=b.find_closest(a);
+    if(!f)
+        cout << "f is not found" << endl;
+    else
+        cout << "f->data: " << f->data << endl;
+        
+}
+
 int main() {
 	cout << "Binary Search Tree" << endl;
 
@@ -591,6 +657,9 @@ int main() {
 	cout << " AFTER removing ... " << endl;
 	b.print();
 
+        for(int i=0;i<=30;i++)
+            find_thing(b,i);
+        
 
 	return 0;
 
