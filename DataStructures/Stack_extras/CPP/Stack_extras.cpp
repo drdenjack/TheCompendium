@@ -68,20 +68,15 @@ int STK::size()
 
 int STK::min()
 {
-    // if(size()>0)
-    //     return _min;
-    // else
-    //     throw(...);
-
+    if(is_empty())
+        throw "STK is empty.  No min available";
     return _min;
 }
 
 int STK::max()
 {
-    // if(size()>0)
-    //     return _max;
-    // else
-    //     throw(...);
+    if(is_empty())
+        throw "STK is empty.  No max available";
     return _max;
 }
 
@@ -125,10 +120,10 @@ void STK::resize()
 void STK::pop()
 {
     int pop_val=_data[_size-1];
-    if(size()>0)
+    if(!is_empty())
         _size--;
 
-    if(_size==0)
+    if(is_empty())
     {
         _min=INT_MAX;
         _max=INT_MIN;
@@ -159,21 +154,30 @@ void STK::pop()
 
 int STK::top()
 {
-    if(size()>0)
-        return _data[size()-1];
-    // else
-    //     throw(...)
-    
-    return INT_MIN;
-
+    if(is_empty())
+        throw "STK is empty";
+    return _data[size()-1];
+    // NOTE: the STL stack just has a segmentation fault when accessing top() of an empty stack.
 }
 
 void STK::print()
 {
     cout << " -- printing --\n";
     cout << "size: " << size() << endl;
-    cout << "min: " << min() << endl;
-    cout << "max: " << max() << endl;
+    try {
+        cout << "min: " << min() << endl;
+    }
+    catch (const char* msg) {
+        cout << msg << endl;
+    }
+        
+    try {
+        cout << "max: " << max() << endl;
+    }
+    catch (const char* msg) {
+        cout << msg << endl;
+    }
+    
     cout << "max_size: " << max_size() << endl;
 
     for(int i=size()-1;i>=0;i--)
@@ -189,8 +193,13 @@ int main() {
         STK S(2);
         S.print();
 
-        int top=S.top();
-        cout << "top: " << top << endl;
+        int top;
+        try {
+            top=S.top();
+            cout << "top: " << top << endl;
+        } catch (const char* msg) {
+            cout << msg << endl;
+        }
         
         S.pop();
         S.print();
@@ -218,6 +227,7 @@ int main() {
         
         S.pop(); 
         S.print();
+
         
 	return 0;
 
