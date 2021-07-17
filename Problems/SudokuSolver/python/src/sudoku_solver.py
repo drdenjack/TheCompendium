@@ -27,24 +27,28 @@ class Node:
         # self._square = self.get_square()
 
     def set_val(self, val):
-        # if self.is_possible(val):
+        if self.is_possible(val):
             self._val = val
-        # else:
-            # raise ValueError(f'{val} cannot be set in node with index={self._idx}')
+            self.remove_possible_value(val)
+            return val
+        else:
+            raise ValueError(f'{val} cannot be set in node with index={self._idx}')
 
     def is_possible(self, val):
+        if val == 0:
+            return True
         return val in self._possible_values
 
     def set_possible_values(self):
         possible_values = {}
-
-        for i in range(1, 10):
-            if i != self._val:
-                possible_values[i] = 1
+        for i in range(0, 10):
+            # if i != self._val:
+            possible_values[i] = 1
         return possible_values
 
     def remove_possible_value(self, val):
-        self._possible_values.pop(val)
+        if val != 0:
+            self._possible_values.pop(val)
 
     def get_row(self):
         return self._idx // 9
@@ -75,10 +79,16 @@ class Solver:
 
     def populate_board(self):
         for idx, val in enumerate(self._input):
-            self._board[idx].set_val(val)
-            self.validate_board(idx)
-            self.remove_val_from_row(val, idx)
-            self.remove_val_from_col(val, idx)
+            self.populate_space(idx, val)
+
+    def populate_space(self, idx, val):
+        self._board[idx].set_val(val)
+        self.validate_board(idx)
+        self.propagate_changes(idx, val)
+
+    def propagate_changes(self, idx, val):
+        self.remove_val_from_row(idx, val)
+        self.remove_val_from_col(idx, val)
 
     def validate_input(self):
         if len(self._input) != 81:
@@ -98,7 +108,7 @@ class Solver:
                         # raise ValueError(f'spaces {i} and {idx} have the same value of {curr_space._val}')
         return True
 
-    def remove_val_from_row(self, val, idx):
+    def remove_val_from_row(self, idx, val):
         target_space = self._board[idx]
         for i in range(81):
             curr_space = self._board[i]
@@ -107,7 +117,7 @@ class Solver:
                     curr_space.remove_possible_value(target_space._val)
         return True
 
-    def remove_val_from_col(self, val, idx):
+    def remove_val_from_col(self, idx, val):
         target_space = self._board[idx]
         for i in range(81):
             curr_space = self._board[i]
@@ -116,7 +126,7 @@ class Solver:
                     curr_space.remove_possible_value(target_space._val)
         return True
 
-    def remove_val_from_square(self, val, idx):
+    def remove_val_from_square(self, idx, val):
         pass
 
     def dump(self, arr=None):
